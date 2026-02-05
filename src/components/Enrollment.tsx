@@ -84,7 +84,7 @@ export const Enrollment = () => {
       `🏫 Suggested Class: ${calculateClass()}\n\n` +
       `I would like to apply for enrollment at Shongamiti High School.`
     );
-    window.open(`https://wa.me/27746084190?text=${message}`, '_blank');
+    window.open(`https://wa.me/263782404426?text=${message}`, '_blank');
   };
 
   const currentSubjects = formData.level.includes("Advanced") ? advancedSubjects : ordinarySubjects;

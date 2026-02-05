@@ -8,19 +8,19 @@ const achievements = [
     icon: Bus,
     title: "School Bus",
     description: "A modern 75-seater bus for safe student transportation across the district.",
-    highlight: "75 Seater Capacity",
+
   },
   {
     icon: Building2,
     title: "School Hall",
     description: "State-of-the-art assembly hall for events, performances, and gatherings.",
-    highlight: "Multi-Purpose Facility",
+
   },
   {
     icon: BookMarked,
     title: "New Classroom Blocks",
     description: "Two recently constructed classroom blocks with modern learning facilities.",
-    highlight: "2 New Blocks",
+
   },
 ];
 
@@ -64,10 +64,7 @@ export const Achievements = () => {
                             flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <item.icon className="w-10 h-10 text-primary" />
               </div>
-              <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-sm 
-                             font-semibold rounded-full mb-4">
-                {item.highlight}
-              </span>
+
               <h3 className="text-xl font-display font-semibold mb-3">{item.title}</h3>
               <p className="text-muted-foreground text-sm">{item.description}</p>
             </motion.div>
@@ -89,7 +86,7 @@ export const Achievements = () => {
               please contact our school clerk directly.
             </p>
             <a
-              href="https://wa.me/27746084190"
+              href="https://wa.me/263782404426"
               target="_blank"
               rel="noopener noreferrer"
               className="btn-gold inline-flex items-center gap-2"
