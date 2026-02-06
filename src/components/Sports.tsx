@@ -1,30 +1,30 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { Trophy, Users, Timer, Star } from "lucide-react";
+import { Trophy, Users, Timer, Star, Basketball, Soccer, Chess, Zap } from "lucide-react";
 
 const sports = [
   {
     name: "Basketball",
-    icon: "🏀",
+    icon: Basketball,
     description: "Competitive basketball teams for both boys and girls, participating in inter-school tournaments.",
     color: "from-orange-500 to-red-500",
   },
   {
     name: "Soccer",
-    icon: "⚽",
+    icon: Soccer,
     description: "Premier football program with dedicated coaching staff and regular league matches.",
     color: "from-green-500 to-emerald-600",
   },
   {
     name: "Chess",
-    icon: "♟️",
+    icon: Chess,
     description: "Strategic minds program developing critical thinking through competitive chess.",
     color: "from-slate-600 to-slate-800",
   },
   {
     name: "Athletics",
-    icon: "🏃",
+    icon: Zap,
     description: "Track and field excellence with training in sprints, long distance, and field events.",
     color: "from-blue-500 to-indigo-600",
   },
@@ -81,9 +81,9 @@ export const Sports = () => {
                 {/* Icon */}
                 <motion.div
                   whileHover={{ scale: 1.2, rotate: 10 }}
-                  className="text-5xl mb-4 inline-block"
+                  className="mb-4 inline-block"
                 >
-                  {sport.icon}
+                  <sport.icon className="w-12 h-12 text-primary group-hover:text-primary/80 transition-colors" />
                 </motion.div>
 
                 {/* Content */}
