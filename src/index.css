@@ -159,8 +159,7 @@
   }
 
   .text-gradient-gold {
-    @apply bg-clip-text text-transparent;
-    background: var(--gradient-gold);
+    @apply text-primary font-bold;
   }
 
   .btn-gold {
