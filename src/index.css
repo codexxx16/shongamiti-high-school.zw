@@ -131,11 +131,11 @@
 
 @layer components {
   .section-title {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-secondary tracking-tight;
+    @apply text-2xl md:text-3xl lg:text-4xl font-bold text-secondary tracking-tight;
   }
 
   .section-subtitle {
-    @apply text-lg md:text-xl text-muted-foreground max-w-2xl;
+    @apply text-base md:text-lg text-muted-foreground max-w-2xl leading-7;
   }
 
   .gold-text {
@@ -147,7 +147,7 @@
   }
 
   .card-elevated {
-    @apply bg-card rounded-xl shadow-[var(--shadow-elevated)] border border-border/50;
+    @apply bg-card rounded-lg shadow-[var(--shadow-elevated)] border border-border/50;
   }
 
   .gold-gradient {
@@ -164,15 +164,19 @@
   }
 
   .btn-gold {
-    @apply bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-lg 
-           transition-all duration-300 hover:shadow-[var(--shadow-gold)] 
-           hover:scale-105 active:scale-95;
+    @apply bg-primary text-primary-foreground font-semibold px-5 py-2.5 rounded-lg 
+           transition-all duration-200 hover:shadow-[var(--shadow-gold)] hover:-translate-y-0.5 
+           active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
 
   .btn-navy {
-    @apply bg-secondary text-secondary-foreground font-semibold px-6 py-3 rounded-lg 
-           transition-all duration-300 hover:bg-secondary/90 
-           hover:scale-105 active:scale-95;
+    @apply bg-secondary text-secondary-foreground font-semibold px-5 py-2.5 rounded-lg 
+           transition-all duration-200 hover:bg-secondary/90 hover:-translate-y-0.5 
+           active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2;
+  }
+
+  .animate-page-in {
+    animation: page-in 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
   }
 
   .link-underline {
@@ -194,6 +198,16 @@
 
   .animate-shimmer {
     animation: shimmer 2s linear infinite;
+  }
+
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-page-in { animation: none; }
+    *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
   }
 
   @keyframes float {

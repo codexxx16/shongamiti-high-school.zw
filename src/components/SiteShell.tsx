@@ -5,7 +5,7 @@ import schoolLogo from "@/assets/school-logo.jpg";
 import { portalNavigation } from "@/data/site";
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
-  `inline-flex items-center gap-2 border-b-2 px-3 py-2 text-sm font-semibold transition-colors ${
+  `inline-flex items-center gap-1.5 border-b-2 px-2.5 py-1.5 text-[13px] font-semibold transition-colors duration-200 ${
     isActive ? "border-primary text-secondary" : "border-transparent text-slate-600 hover:border-primary/50 hover:text-secondary"
   }`;
 
@@ -38,8 +38,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             ))}
           </nav>
           <div className="hidden items-center gap-3 lg:flex">
-            <Link to="/staff" className="text-sm font-semibold text-slate-600 hover:text-secondary">Staff portal</Link>
-            <Link to="/admissions/apply" className="btn-gold inline-flex items-center gap-2 px-4 py-2 text-sm">
+            <Link to="/staff" className="link-underline text-[13px] font-semibold text-slate-600 hover:text-secondary">Staff portal</Link>
+            <Link to="/admissions/apply" className="btn-gold inline-flex items-center gap-1.5 px-3.5 py-2 text-[13px]">
               Apply online <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
@@ -60,7 +60,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           </div>
         )}
       </header>
-      <main>{children}</main>
+      <main key={location.pathname} className="animate-page-in">{children}</main>
       <footer className="border-t border-secondary/20 bg-secondary text-secondary-foreground">
         <div className="container grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div>

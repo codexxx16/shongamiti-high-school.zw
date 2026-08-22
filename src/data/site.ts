@@ -238,12 +238,12 @@ export const portalPages: Record<string, PortalPageData> = {
 };
 
 export const informationItems = [
-  { title: "2026 admissions guidance", type: "Admissions document", date: "Published for review", icon: FileText },
-  { title: "Term dates and school calendar", type: "Calendar", date: "Academic year reference", icon: CalendarDays },
-  { title: "Parent and guardian circulars", type: "Circulars", date: "Official communication", icon: Megaphone },
-  { title: "Student conduct and appearance", type: "Policy", date: "School standards", icon: ShieldCheck },
-  { title: "Academic departments and subjects", type: "Academic guide", date: "Curriculum reference", icon: Library },
-  { title: "School history and milestones", type: "Heritage record", date: "Institutional reference", icon: Building2 },
+  { slug: "admissions-guidance", title: "2026 admissions guidance", type: "Admissions document", date: "Published for review", summary: "The preparation guide for families beginning an application and assembling supporting records.", icon: FileText },
+  { slug: "term-dates", title: "Term dates and school calendar", type: "Calendar", date: "Academic year reference", summary: "A dated reference for term opening, assessment periods, events, and office communication.", icon: CalendarDays },
+  { slug: "parent-circulars", title: "Parent and guardian circulars", type: "Circulars", date: "Official communication", summary: "A publication area for notices that require a family response or acknowledgement.", icon: Megaphone },
+  { slug: "student-conduct", title: "Student conduct and appearance", type: "Policy", date: "School standards", summary: "The standards that support a respectful, safe, and orderly learning environment.", icon: ShieldCheck },
+  { slug: "academic-departments", title: "Academic departments and subjects", type: "Academic guide", date: "Curriculum reference", summary: "A guide to subject areas, academic support, and the structure of teaching and learning.", icon: Library },
+  { slug: "history-milestones", title: "School history and milestones", type: "Heritage record", date: "Institutional reference", summary: "A growing record of the people, milestones, and traditions that shape the school identity.", icon: Building2 },
 ];
 
 export const staffDashboardStats = [
