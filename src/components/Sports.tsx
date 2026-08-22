@@ -1,24 +1,24 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { Trophy, Users, Timer, Star, Basketball, Soccer, Chess, Zap } from "lucide-react";
+import { Trophy, Users, Timer, Star, CircleDot, Shield, Brain, Zap } from "lucide-react";
 
 const sports = [
   {
     name: "Basketball",
-    icon: Basketball,
+    icon: CircleDot,
     description: "Competitive basketball teams for both boys and girls, participating in inter-school tournaments.",
     color: "from-orange-500 to-red-500",
   },
   {
     name: "Soccer",
-    icon: Soccer,
+    icon: Shield,
     description: "Premier football program with dedicated coaching staff and regular league matches.",
     color: "from-green-500 to-emerald-600",
   },
   {
     name: "Chess",
-    icon: Chess,
+    icon: Brain,
     description: "Strategic minds program developing critical thinking through competitive chess.",
     color: "from-slate-600 to-slate-800",
   },
