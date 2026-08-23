@@ -1,0 +1,23 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /applicationTracking/{trackingCode} {
+      allow create: if request.resource.data.trackingCode == trackingCode
+      && request.resource.data.referenceNumber is string
+      && request.resource.data.status == 'submitted'
+      && request.resource.data.submittedAt is string
+      && request.resource.data.updatedAt is string;
+
+      allow get: if resource.data.trackingCode == trackingCode;
+      allow update: if request.auth != null
+        && request.auth.token.email == 'charlesstentacion@gmail.com'
+        && request.resource.data.trackingCode == resource.data.trackingCode
+        && request.resource.data.referenceNumber == resource.data.referenceNumber
+        && request.resource.data.submittedAt == resource.data.submittedAt
+        && request.resource.data.status in ['submitted', 'under_review', 'approved', 'rejected']
+        && request.resource.data.updatedAt is string;
+      allow list, delete: if false;
+    }
+  }
+}
