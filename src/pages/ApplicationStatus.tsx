@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ArrowLeft, CheckCircle2, Clock3, Loader2, Search, ShieldAlert } from "lucide-react";
 import { Link } from "react-router-dom";
 import { lookupTrackingRecord, type TrackingRecord } from "@/lib/firebase";
-import { supabase, type ApplicationStatus as Status } from "@/lib/supabase";
+import { type ApplicationStatus as Status } from "@/lib/supabase";
 
 const labels: Record<Status, string> = { draft: "Draft", submitted: "Submitted", under_review: "Under review", approved: "Approved", rejected: "Decision recorded" };
 const referenceKey = "shongamiti-admissions-reference";
@@ -36,12 +36,6 @@ export default function ApplicationStatus() {
           setLoading(false);
           return;
         }
-      }
-      const supabaseFallback = await supabase.from("admissions_applications").select("status,submitted_at").eq("reference_number", normalizedReference).limit(1).maybeSingle();
-      if (supabaseFallback.data) {
-        setResult({ status: supabaseFallback.data.status as Status, submittedAt: supabaseFallback.data.submitted_at });
-        setLoading(false);
-        return;
       }
     } catch {
       // Keep the same user-facing response for missing or unavailable records.
