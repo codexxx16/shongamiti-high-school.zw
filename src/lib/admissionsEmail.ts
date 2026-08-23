@@ -47,12 +47,14 @@ export function buildApplicationEmail(data: ApplicationEmailData) {
     "",
     "Please attach the supporting records listed above before sending this email.",
   ].join("\n");
+  const to = admissionsEmail;
   const encodedSubject = encodeURIComponent(subject);
   const encodedBody = encodeURIComponent(body);
   return {
+    to,
     subject,
     body,
-    mailto: `mailto:${admissionsEmail}?subject=${encodedSubject}&body=${encodedBody}`,
-    gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(admissionsEmail)}&su=${encodedSubject}&body=${encodedBody}`,
+    mailto: `mailto:${to}?subject=${encodedSubject}&body=${encodedBody}`,
+    gmail: `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${encodedSubject}&body=${encodedBody}`,
   };
 }

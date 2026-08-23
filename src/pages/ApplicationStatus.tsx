@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowLeft, CheckCircle2, Clock3, Loader2, Search, ShieldAlert } from "lucide-react";
 import { Link } from "react-router-dom";
 import { lookupTrackingRecord, type TrackingRecord } from "@/lib/firebase";
+import { toast } from "@/hooks/use-toast";
 import { type ApplicationStatus as Status } from "@/lib/supabase";
 
 const labels: Record<Status, string> = { draft: "Draft", submitted: "Submitted", under_review: "Under review", approved: "Approved", rejected: "Decision recorded" };
@@ -24,6 +25,7 @@ export default function ApplicationStatus() {
     if (remote) {
       setResult(remote);
       setLoading(false);
+      toast({ title: "Application status found", description: `${labels[remote.status]} · ${normalizedReference}` });
       return;
     }
 
@@ -32,16 +34,20 @@ export default function ApplicationStatus() {
       if (local) {
         const parsed = JSON.parse(local) as { status?: Status; submittedAt?: string; trackingCode?: string };
         if (parsed.trackingCode === normalizedCode) {
-          setResult({ status: parsed.status ?? "submitted", submittedAt: parsed.submittedAt ?? null });
+          const localStatus = parsed.status ?? "submitted";
+          setResult({ status: localStatus, submittedAt: parsed.submittedAt ?? null });
           setLoading(false);
+          toast({ title: "Application status found", description: `${labels[localStatus]} · saved on this device` });
           return;
         }
       }
     } catch {
       // Keep the same user-facing response for missing or unavailable records.
     }
-    setMessage("No matching application was found. Confirm the reference number and private tracking code, then try again.");
+    const feedback = "No matching application was found. Confirm the reference number and private tracking code, then try again.";
+    setMessage(feedback);
     setLoading(false);
+    toast({ title: "Application not found", description: feedback, variant: "destructive" });
   };
 
   const lastRecorded = result && ("updatedAt" in result ? result.updatedAt : result.submittedAt);

@@ -4,6 +4,7 @@ import { ArrowUpRight, CheckCircle2, ClipboardCheck, FileText, Loader2, LogIn, L
 import { Link } from "react-router-dom";
 import { demoApplications, staffDashboardStats } from "@/data/site";
 import { firebaseAuth, updateTrackingRecord } from "@/lib/firebase";
+import { toast } from "@/hooks/use-toast";
 import { supabase, type ApplicationStatus } from "@/lib/supabase";
 
 export default function StaffPortal() {
@@ -41,24 +42,45 @@ export default function StaffPortal() {
       if (result.user.email?.toLowerCase() !== "charlesstentacion@gmail.com") {
         await signOutFirebase(firebaseAuth);
         setFirebaseReady(false);
-        setMessage("Live status sync is restricted to the approved school administrator account.");
+        const feedback = "Live status sync is restricted to the approved school administrator account.";
+        setMessage(feedback);
+        toast({ title: "Live sync unavailable", description: feedback, variant: "destructive" });
         return;
       }
       setFirebaseReady(true);
-      setMessage("Live applicant status sync is enabled for this staff session.");
+      const feedback = "Live applicant status sync is enabled for this staff session.";
+      setMessage(feedback);
+      toast({ title: "Live sync enabled", description: feedback });
     } catch {
-      setMessage("Google staff verification was cancelled or could not be completed. The admissions review session remains available.");
+      const feedback = "Google staff verification was cancelled or could not be completed. The admissions review session remains available.";
+      setMessage(feedback);
+      toast({ title: "Google verification not completed", description: feedback, variant: "destructive" });
     }
   };
 
   const signIn = async () => {
-    if (!email) return;
-    setLoading(true); setMessage("");
+    if (!email) {
+      const feedback = "Enter the approved staff email address before requesting a sign-in link.";
+      setMessage(feedback);
+      toast({ title: "Staff email required", description: feedback, variant: "destructive" });
+      return;
+    }
+    setLoading(true);
+    setMessage("");
     const result = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.origin + "/staff" } });
-    setMessage(result.error ? "The staff sign-in link could not be sent. Check the address or contact the system administrator." : "A secure sign-in link has been sent to the staff email address.");
+    const feedback = result.error ? "The staff sign-in link could not be sent. Check the address or contact the system administrator." : "A secure sign-in link has been sent to the staff email address.";
+    setMessage(feedback);
+    toast({ title: result.error ? "Sign-in link not sent" : "Sign-in link sent", description: feedback, variant: result.error ? "destructive" : "default" });
     setLoading(false);
   };
-  const signOut = async () => { await supabase.auth.signOut(); await signOutFirebase(firebaseAuth); setFirebaseReady(false); setSignedIn(false); setStaff(false); };
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    await signOutFirebase(firebaseAuth);
+    setFirebaseReady(false);
+    setSignedIn(false);
+    setStaff(false);
+    toast({ title: "Signed out", description: "The staff workspace is closed." });
+  };
   const updateApplicationStatus = async (reference: string, status: string) => {
     const nextStatus = status.toLowerCase().replaceAll(" ", "_") as ApplicationStatus;
     const current = await supabase.from("admissions_applications").select("id, status, entry_form").eq("reference_number", reference).maybeSingle();
@@ -70,7 +92,9 @@ export default function StaffPortal() {
       if (!updated.error && trackingCode && firebaseReady) await updateTrackingRecord(trackingCode, nextStatus);
     }
     setApplications((currentItems) => currentItems.map((item) => item.reference === reference ? { ...item, status } : item));
-    setMessage(firebaseReady ? `Status updated for ${reference} and synchronized to the applicant tracker.` : `Status updated for ${reference}. Enable live status sync to update the applicant tracker.`);
+    const feedback = firebaseReady ? `Status updated for ${reference} and synchronized to the applicant tracker.` : `Status updated for ${reference}. Enable live status sync to update the applicant tracker.`;
+    setMessage(feedback);
+    toast({ title: "Application status updated", description: feedback });
   };
 
   if (loading) return <section className="container flex min-h-[520px] items-center justify-center"><Loader2 className="h-7 w-7 animate-spin text-primary" /></section>;
