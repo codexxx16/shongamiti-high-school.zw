@@ -27,8 +27,31 @@ type ApplicationForm = {
 const initialForm: ApplicationForm = { applicantEmail: "", applicantPhone: "", studentName: "", guardianName: "", guardianRelationship: "Parent or legal guardian", requestedLevel: "", requestedForm: "", previousSchool: "", academicSummary: "", address: "", consent: false };
 const levels = { "Ordinary Level": ["Form 1", "Form 2", "Form 3", "Form 4"], "Advanced Level": ["Form 5", "Form 6"] };
 
+function readLocalValue(key: string) {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeLocalValue(key: string, value: string) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Local persistence is optional when browser storage is restricted.
+  }
+}
+
+function removeLocalValue(key: string) {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // Local persistence is optional when browser storage is restricted.
+  }
+}
+
 export default function Application() {
-  const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<ApplicationForm>(initialForm);
   const [files, setFiles] = useState<File[]>([]);
@@ -41,19 +64,31 @@ export default function Application() {
   const [handoffChoice, setHandoffChoice] = useState<"mail" | "gmail" | null>(null);
 
   useEffect(() => {
-    const draft = localStorage.getItem(draftKey);
-    const savedReference = localStorage.getItem(referenceKey);
-    if (draft) setForm({ ...initialForm, ...JSON.parse(draft) });
-    if (savedReference) setReference(savedReference);
-    const savedTrackingCode = localStorage.getItem(`${referenceKey}-tracking-code`);
-    if (savedTrackingCode) setTrackingCode(savedTrackingCode);
+    try {
+      const draft = readLocalValue(draftKey);
+      const savedReference = readLocalValue(referenceKey);
+      if (draft) {
+        const parsed = JSON.parse(draft) as Partial<ApplicationForm>;
+        if (parsed && typeof parsed === "object") setForm({ ...initialForm, ...parsed });
+      }
+      if (savedReference) setReference(savedReference);
+      const savedTrackingCode = readLocalValue(`${referenceKey}-tracking-code`);
+      if (savedTrackingCode) setTrackingCode(savedTrackingCode);
+    } catch {
+      try {
+        removeLocalValue(draftKey);
+      } catch {
+        // Storage can be unavailable in privacy-restricted browser contexts.
+      }
+      toast({ title: "Draft restoration skipped", description: "The application opened with a fresh form because the saved draft could not be read.", variant: "destructive" });
+    }
   }, []);
 
   const progress = useMemo(() => `${Math.round((step / 4) * 100)}%`, [step]);
   const update = <K extends keyof ApplicationForm>(key: K, value: ApplicationForm[K]) => setForm((current) => ({ ...current, [key]: value }));
   const saveDraft = () => {
     const feedback = "Draft saved on this device. Continue when you are ready.";
-    localStorage.setItem(draftKey, JSON.stringify(form));
+    writeLocalValue(draftKey, JSON.stringify(form));
     setMessage(feedback);
     toast({ title: "Draft saved", description: feedback });
   };
@@ -109,11 +144,11 @@ export default function Application() {
       return;
     }
     if (step < 4) {
-      localStorage.setItem(draftKey, JSON.stringify(form));
+      writeLocalValue(draftKey, JSON.stringify(form));
       const draftReference = await persistApplication("draft");
       if (draftReference) {
         setReference(draftReference);
-        localStorage.setItem(referenceKey, draftReference);
+        writeLocalValue(referenceKey, draftReference);
       }
       const nextStep = step + 1;
       setStep(nextStep);
@@ -130,11 +165,11 @@ export default function Application() {
     const finalReference = backendReference || generatedReference;
     setReference(finalReference);
     setTrackingCode(finalTrackingCode);
-    localStorage.setItem(referenceKey, finalReference);
-    localStorage.setItem(`${referenceKey}-tracking-code`, finalTrackingCode);
-    localStorage.setItem(`shongamiti-admissions-reference-${finalReference}`, JSON.stringify({ email: form.applicantEmail, status: "submitted", submittedAt: new Date().toISOString(), trackingCode: finalTrackingCode }));
-    localStorage.setItem(`${draftKey}-submitted`, JSON.stringify({ ...form, files: files.map((file) => file.name), reference: finalReference, trackingCode: finalTrackingCode, status: "submitted" }));
-    localStorage.removeItem(draftKey);
+    writeLocalValue(referenceKey, finalReference);
+    writeLocalValue(`${referenceKey}-tracking-code`, finalTrackingCode);
+    writeLocalValue(`shongamiti-admissions-reference-${finalReference}`, JSON.stringify({ email: form.applicantEmail, status: "submitted", submittedAt: new Date().toISOString(), trackingCode: finalTrackingCode }));
+    writeLocalValue(`${draftKey}-submitted`, JSON.stringify({ ...form, files: files.map((file) => file.name), reference: finalReference, trackingCode: finalTrackingCode, status: "submitted" }));
+    removeLocalValue(draftKey);
     setSaving(false);
     setPreparing(false);
     setComplete(true);
